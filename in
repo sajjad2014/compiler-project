@@ -1,8 +1,9 @@
 function main () : integer
 begin
-    a : boolean := 40;
+    a : boolean := 0;
     b : boolean := 9;
-    write(a + b);
+    c : boolean := 0;
+    write(a < b);
 end
 <--function main() : integer
 begin

@@ -3,16 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a774fea2-6fdf-4ad2-8de6-d377f02e8be5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1.pgs" beforeDir="false" afterPath="$PROJECT_DIR$/1.pgs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/in" beforeDir="false" afterPath="$PROJECT_DIR$/in" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/PascalScanner.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/PascalScanner.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/TokenConst.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/TokenConst.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/scanner.jflex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/PascalScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/PascalScanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/TokenConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/TokenConst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/company/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/scanner.jflex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/table.npt" beforeDir="false" afterPath="$PROJECT_DIR$/table.npt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -96,8 +89,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
-          <line>493</line>
+          <line>610</line>
           <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
+          <line>518</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
+          <line>139</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
