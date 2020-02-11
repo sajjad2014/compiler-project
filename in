@@ -1,7 +1,10 @@
-function a() : integer
+function main() : integer
 begin
-return c;
-   return 0 ;
+    a : integer := 3;
+    b : integer ;
+    c : integer ;
+    a := b;
+    a := b * c ;
 end
 <--function main() : integer
 begin
@@ -13,6 +16,5 @@ begin
     begin
         write("not equal ! ") ;
     end
+end
 -->
-
---end

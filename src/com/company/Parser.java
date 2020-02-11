@@ -17,7 +17,8 @@ public class Parser
     PTBlock[][] parseTable;
     Stack<Integer> parseStack = new Stack<Integer>();
     String[] symbols;
-
+    Token currentToken;
+    Token previousToken;
     public Parser(BufferedReader inputFile, String[] symbols, PTBlock[][] parseTable)
     {
         try
@@ -60,7 +61,7 @@ public class Parser
                     }
                     case PTBlock.ActionType.Shift:
                     {
-                        cg.Generate(ptb.getSem());
+                        cg.Generate(ptb.getSem(), currentToken);
                         tokenId = nextTokenID();
                         curNode = ptb.getIndex();
                     }
@@ -82,11 +83,10 @@ public class Parser
 
                         curNode = parseStack.pop();
                         ptb = parseTable[curNode][ptb.getIndex()];
-                        cg.Generate(ptb.getSem());
+                        cg.Generate(ptb.getSem(), previousToken);
                         curNode = ptb.getIndex();
                     }
                     break;
-
                     case PTBlock.ActionType.Accept:
                     {
                         notAccepted = false;
@@ -105,10 +105,12 @@ public class Parser
 
     int nextTokenID()
     {
-        Token t = new Token(-1, -1);
+        Token t = new Token(-1, "noop");
         try
         {
             t = scanner.next_token();
+            previousToken = currentToken;
+            currentToken = t;
         }
         catch (Exception e)
         {

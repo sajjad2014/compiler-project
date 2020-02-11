@@ -12,7 +12,7 @@ import java.util.*;
 %type Token
 %eofval{
     if(bracketCount == 0)
-        return new Token(TokenConst.EOF, -1);
+        return new Token(TokenConst.EOF, "-1");
     else
         Report.error("Odd number of Brackets", - 1);
 %eofval}
@@ -40,9 +40,9 @@ CharConst = ['][^'][']
 
 <YYINITIAL>{
 	{Whitespace} {}
-	// "write" {
-    //     return new Token(TokenConst.WRITE, yytext());
-    // }
+	"write" {
+        return new Token(TokenConst.WRITE, yytext());
+    }
     // "read" {
     //     return new Token(TokenConst.READ, yytext());
     // }
@@ -61,7 +61,7 @@ CharConst = ['][^'][']
     "begin" {
         return new Token(TokenConst.BEGIN, yytext());
     }
-    "char" {
+    "character" {
         return new Token(TokenConst.CHAR, yytext());
     }
     "do" {
@@ -124,13 +124,13 @@ CharConst = ['][^'][']
         return new Token(TokenConst.ID, yytext());
     }
     {ICD} {
-        return new Token(TokenConst.ICD, Double.parseDouble(yytext()));
+        return new Token(TokenConst.ICD, yytext());
     }
     {ICC} {
-        return new Token(TokenConst.ICC, Integer.parseInt(yytext()));
+        return new Token(TokenConst.ICC, yytext());
     }
     {HEX} {
-        return new Token(TokenConst.HEX, Integer.parseInt(yytext().substring(2), 16));
+        return new Token(TokenConst.HEX, Integer.toString(Integer.parseInt(yytext().substring(2), 16)));
     }
     {StringConst} {
         return new Token(TokenConst.StringConst, yytext());

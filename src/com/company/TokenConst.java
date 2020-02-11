@@ -49,7 +49,6 @@ public class   TokenConst {
     public static final int STRING = 45;
     public static final int CHAR = 46;
     public static final int BOOLEAN = 47;
-    //    public static final int WRITE = 0;
 //    public static final int READ = 1;
 //    public static final int MAIN = 2;
 //    STRLEN;
@@ -57,4 +56,5 @@ public class   TokenConst {
     public static final int LONG = 49;
     public static final int TRUE = 50;
     public static final int FALSE = 51;
+    public static final int WRITE = 52;
 }

@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a774fea2-6fdf-4ad2-8de6-d377f02e8be5" name="Default Changelist" comment="" />
+    <list default="true" id="a774fea2-6fdf-4ad2-8de6-d377f02e8be5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/company/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/in" beforeDir="false" afterPath="$PROJECT_DIR$/in" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/1.pgs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/Parser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/PascalScanner.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/PascalScanner.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/Token.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/Token.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/TokenConst.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/TokenConst.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/scanner.jflex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/1.pgs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/PascalScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/PascalScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/TokenConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/TokenConst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/company/scanner.jflex" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/scanner.jflex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/table.npt" beforeDir="false" afterPath="$PROJECT_DIR$/table.npt" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +35,14 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1XOXsumZm74EtZs4b7LdUKJyfAF" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -58,13 +85,36 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/company/Parser.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
+          <line>269</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
+          <line>71</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
+          <line>27</line>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
