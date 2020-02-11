@@ -1,10 +1,8 @@
-function main() : integer
+function main () : integer
 begin
-    a : integer := 3;
-    b : integer ;
-    c : integer ;
-    a := b;
-    a := b * c ;
+    a : boolean := 40;
+    b : boolean := 9;
+    write(a + b);
 end
 <--function main() : integer
 begin
@@ -17,4 +15,8 @@ begin
         write("not equal ! ") ;
     end
 end
+    a : integer := 3.2;
+    b : character ;
+    c : character ;
+    a := -(a + b);
 -->

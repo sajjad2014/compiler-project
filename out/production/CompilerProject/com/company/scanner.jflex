@@ -43,15 +43,15 @@ CharConst = ['][^'][']
 	"write" {
         return new Token(TokenConst.WRITE, yytext());
     }
-    // "read" {
-    //     return new Token(TokenConst.READ, yytext());
-    // }
-    // "main" {
-    //     return new Token(TokenConst.MAIN, yytext());
-    // }
-    // "strlen" {
-    //     return new Token(TokenConst.STRLEN, yytext());
-    // }
+    "read" {
+        return new Token(TokenConst.READ, yytext());
+    }
+    "main" {
+        return new Token(TokenConst.MAIN, yytext());
+    }
+    "strlen" {
+        return new Token(TokenConst.STRLEN, yytext());
+    }
     "array" {
         return new Token(TokenConst.ARRAY, yytext());
     }	
