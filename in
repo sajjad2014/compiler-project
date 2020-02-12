@@ -1,9 +1,9 @@
 function main () : integer
 begin
-    a : boolean := 0;
-    b : boolean := 9;
-    c : boolean := 0;
-    write(a < b);
+    a : integer := 0;
+    b : real := 0;
+    c : boolean := 1;
+    write(~a or b and c);
 end
 <--function main() : integer
 begin

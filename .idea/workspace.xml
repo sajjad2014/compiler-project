@@ -6,7 +6,6 @@
       <change beforePath="$PROJECT_DIR$/in" beforeDir="false" afterPath="$PROJECT_DIR$/in" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CompilerProject/com/company/CodeGenerator.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/company/CodeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/table.npt" beforeDir="false" afterPath="$PROJECT_DIR$/table.npt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -89,18 +88,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
-          <line>610</line>
+          <line>828</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
-          <line>518</line>
-          <option name="timeStamp" value="34" />
+          <line>137</line>
+          <option name="timeStamp" value="40" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/company/CodeGenerator.java</url>
-          <line>139</line>
-          <option name="timeStamp" value="40" />
+          <line>505</line>
+          <option name="timeStamp" value="41" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
