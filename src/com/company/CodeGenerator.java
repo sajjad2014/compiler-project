@@ -1,13 +1,19 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
 public class CodeGenerator {
     PascalScanner scanner; // This was my way of informing CG about Constant Values detected by Scanner, you can do whatever you like
     Stack<Token> idStack = new Stack<Token>();
+    Stack<String> stringStack = new Stack<String>();
     HashMap<String, Integer> idType = new HashMap<>();
+    HashMap<String, PascalArray> arrayHashMap = new HashMap<>();
+    PascalArray currentArray;
     int tempI = 0;
+    int stringCount =0;
+    int arrayTempI = 0;
     boolean inMain = false;
     int bracketCount = 0;
     String output = "";
@@ -17,6 +23,7 @@ public class CodeGenerator {
         output += "@.formatStringDigit = private constant [3 x i8] c\"%d\\00\" \n";
         output += "@.formatStringFloat = private constant [3 x i8] c\"%f\\00\" \n";
         output += "@.formatStringChar = private constant [3 x i8] c\"%c\\00\" \n";
+        output += "@.formatString = private constant [3 x i8] c\"%s\\00\" \n";
     }
 
     public void Generate(String sem, Token currentToken) throws Exception {
@@ -27,12 +34,30 @@ public class CodeGenerator {
             return;
         else if (sem.equals("@push")) {
             idStack.push(currentToken);
+        } else if (sem.equals("@ADCP")) {
+            currentArray = new PascalArray(idStack.peek().value, -1);
+        } else if (sem.equals("@ub")) {
+            currentArray.dimensions.add(Integer.parseInt(currentToken.value));
+        } else if (sem.equals("@CASDCP")) {
+            currentArray.type = currentToken.type;
+            currentArray.createStrings();
+            arrayHashMap.put(currentArray.id, currentArray);
+            String dimensions = "";
+            for (int i = 0; i < currentArray.dimensions.size(); i++)
+                dimensions += "[" + currentArray.dimensions.get(i) + " x ";
+            dimensions += getType(currentArray.type);
+            for (int i = 0; i < currentArray.dimensions.size(); i++)
+                dimensions += "]";
+            output += "%" + idStack.peek() + " = alloca " + dimensions + ", align 16\n";
+            idStack.pop();
         } else if (sem.equals("@SDSCP")) {
             idType.put(idStack.peek().value, currentToken.type);
             if (currentToken.type == 43)
                 output += "%" + idStack.peek() + " = alloca i32, align 4\n";
             else if (currentToken.type == 44)
                 output += "%" + idStack.peek() + " = alloca float, align 4\n";
+            else if (currentToken.type == 45)
+                output += "%" + idStack.peek() + " = alloca [50 x i8], align 16\n";
             else if (currentToken.type == 46)
                 output += "%" + idStack.peek() + " = alloca i8, align 1\n";
             else if (currentToken.type == 47)
@@ -41,32 +66,49 @@ public class CodeGenerator {
             Token rightHandSide = idStack.pop();
             if (rightHandSide.constant) {
                 int leftHandSideType = idType.get(idStack.peek().value);
-                rightHandSide = convertConst(rightHandSide, leftHandSideType);
-                if (leftHandSideType == 43)
-                    output += "store i32 " + Integer.parseInt(rightHandSide.value) + ", i32* %" + idStack.peek() + ", align 4\n";
-                else if (leftHandSideType == 44) {
-                    long intBits = Double.doubleToLongBits((float) Float.parseFloat(rightHandSide.value));
-                    String binary = Long.toHexString(intBits);
-                    output += "store float " + "0x" + binary.toUpperCase() + ", float* %" + idStack.peek() + ", align 4\n";
-                } else if (leftHandSideType == 46)
-                    output += "store i8 " + rightHandSide.value + ", i8* %" + idStack.peek().value + ", align 1\n";
-                else if (leftHandSideType == 47)
-                    output += "store i8 " + rightHandSide.value + ", i8* %" + idStack.peek().value + ", align 1\n";
+                if (rightHandSide.type != 45) {
+                    rightHandSide = convertConst(rightHandSide, leftHandSideType);
+                    if (leftHandSideType == 43)
+                        output += "store i32 " + Integer.parseInt(rightHandSide.value) + ", i32* %" + idStack.peek() + ", align 4\n";
+                    else if (leftHandSideType == 44) {
+                        long intBits = Double.doubleToLongBits((float) Float.parseFloat(rightHandSide.value));
+                        String binary = Long.toHexString(intBits);
+                        output += "store float " + "0x" + binary.toUpperCase() + ", float* %" + idStack.peek() + ", align 4\n";
+                    } else if (leftHandSideType == 46)
+                        output += "store i8 " + rightHandSide.value + ", i8* %" + idStack.peek().value + ", align 1\n";
+                    else if (leftHandSideType == 47)
+                        output += "store i8 " + rightHandSide.value + ", i8* %" + idStack.peek().value + ", align 1\n";
+                }else {
+                    output += "%."+ arrayTempI + " = getelementptr inbounds [50 x i8], [50 x i8]* %" + idStack.peek().value + ", i32 0, i32 0\n";
+                    arrayTempI += 1;
+                    int size = rightHandSide.value.length() + 1;
+                    output += "%" + tempI + " = call i8* @strcpy(i8* %."+ (arrayTempI - 1) + ", i8* getelementptr inbounds ([" + size + " x i8], [" + size + " x i8]* " + stringStack.pop() + ", i32 0, i32 0))\n";
+                    tempI += 1;
+                }
             } else {
-                if (!rightHandSide.value.matches("\\d+"))
-                    Load(rightHandSide);
-                convertRightID(idType.get(idStack.peek().value), rightHandSide);
-                switch (idType.get(idStack.peek().value)) {
-                    case 43:
-                        output += "store i32 %" + (tempI - 1) + ", i32* %" + idStack.peek().value + ", align 4\n";
-                        break;
-                    case 44:
-                        output += "store float %" + (tempI - 1) + ", float* %" + idStack.peek().value + ", align 4\n";
-                        break;
-                    case 46:
-                    case 47:
-                        output += "store i8 %" + (tempI - 1) + ", i8* %" + idStack.peek().value + ", align 1\n";
-                        break;
+                if (idType.get(idStack.peek().value) != 45) {
+                    if (!rightHandSide.value.matches("\\d+"))
+                        Load(rightHandSide);
+                    convertRightID(idType.get(idStack.peek().value), rightHandSide);
+                    switch (idType.get(idStack.peek().value)) {
+                        case 43:
+                            output += "store i32 %" + (tempI - 1) + ", i32* %" + idStack.peek().value + ", align 4\n";
+                            break;
+                        case 44:
+                            output += "store float %" + (tempI - 1) + ", float* %" + idStack.peek().value + ", align 4\n";
+                            break;
+                        case 46:
+                        case 47:
+                            output += "store i8 %" + (tempI - 1) + ", i8* %" + idStack.peek().value + ", align 1\n";
+                            break;
+                    }
+                }else {
+                    output += "%."+ arrayTempI + " = getelementptr inbounds [50 x i8], [50 x i8]* %" + idStack.peek().value + ", i32 0, i32 0\n";
+                    arrayTempI += 1;
+                    output += "%."+ arrayTempI + " = getelementptr inbounds [50 x i8], [50 x i8]* %" + rightHandSide.value + ", i32 0, i32 0\n";
+                    arrayTempI += 1;
+                    output += "%" + tempI + " = call i8* @strcpy(i8* %."+ (arrayTempI - 2) + ", i8* %."+ (arrayTempI - 1) + ")\n";
+                    tempI += 1;
                 }
                 idStack.pop();
             }
@@ -92,6 +134,48 @@ public class CodeGenerator {
             Token token = new Token(46, currentToken.value);
             token.constant = true;
             idStack.push(token);
+        } else if (sem.equals("@string")) {
+            String string = currentToken.value.substring(1, currentToken.value.length() - 1);
+            Token token = new Token(45, currentToken.value.substring(1, currentToken.value.length() - 1));
+//            for (int i = string.length() + 1; i < 50; i++) {
+//                string += "\\00";
+//            }
+            output = "@.string" + stringCount + " = private constant ["+ (string.length() + 1) + " x i8] c\""+ string + "\\00\" \n" + output;
+            stringStack.push("@.string" + stringCount);
+            stringCount += 1;
+            token.constant = true;
+            idStack.push(token);
+        } else if (sem.equals("@array")) {
+            ArrayList<Token> indexes = new ArrayList<>();
+            while (!arrayHashMap.containsKey(idStack.peek().value))
+                indexes.add(idStack.pop());
+            PascalArray pascalArray = arrayHashMap.get(idStack.pop().value);
+            String name = pascalArray.id;
+            for (int i = pascalArray.dimensions.size() - 1; i >= 0; i--) {
+                Token token1 = indexes.get(i);
+                int type = 43;
+                String in1;
+                if (token1.type != 0) {
+                    token1 = convertConst(token1, type);
+                    in1 = token1.value;
+                } else {
+                    if (!token1.value.matches("-?\\d+")) {
+                        Load(token1);
+                        convertRightID(type, token1);
+                        in1 = "%" + (tempI - 1);
+                    } else {
+                        if (convertRightID(type, token1) == 0)
+                            in1 = "%" + (tempI - 1);
+                        else
+                            in1 = "%" + token1.value;
+                    }
+                }
+                output += "%." + arrayTempI + " = getelementptr inbounds " + pascalArray.strings.get(i) + ", " + pascalArray.strings.get(i) + "* %" + name +", i32 0, i32 " + in1 + "\n";
+                name = "." + arrayTempI;
+                arrayTempI += 1;
+            }
+            idStack.push(new Token(0, name));
+            idType.put(name, pascalArray.type);
         } else if (sem.equals("@mult")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
@@ -290,23 +374,33 @@ public class CodeGenerator {
         } else if (sem.equals("@finishwrite")) {
             Token token1 = idStack.pop();
             int type;
-            String in1;
+            int flag = 0;
+            String in1 = "";
             if (token1.type != 0) {
                 type = token1.type;
-                if (type != 44)
-                    in1 = token1.value;
-                else {
-                    long intBits = Double.doubleToLongBits((float) Float.parseFloat(token1.value));
-                    in1 = "0x" + Long.toHexString(intBits).toUpperCase();
+                if(type != 45) {
+                    if (type != 44)
+                        in1 = token1.value;
+                    else {
+                        long intBits = Double.doubleToLongBits((float) Float.parseFloat(token1.value));
+                        in1 = "0x" + Long.toHexString(intBits).toUpperCase();
+                    }
+                }else {
+                    flag = 1;
                 }
             } else {
                 if (!token1.value.matches("-?\\d+")) {
                     type = idType.get(token1.value);
-                    Load(token1);
-                    in1 = "%" + (tempI - 1);
+                    if (type != 45) {
+                        Load(token1);
+                        in1 = "%" + (tempI - 1);
+                    }else {
+                        in1 = token1.value;
+                    }
                 } else {
                     type = idType.get(token1.value);
-                    in1 = "%" + token1.value;
+                    if(type != 45)
+                        in1 = "%" + token1.value;
                 }
             }
             switch (type) {
@@ -328,6 +422,16 @@ public class CodeGenerator {
                     output += "%" + tempI + " = call i32 (i8*, ...)  @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.formatStringDigit , i32 0, i32 0), i8 %" + (tempI - 1) + ")\n";
                     tempI++;
                     break;
+                case 45:
+                    if(flag == 1){
+                        output += "%" + tempI + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds (["+(token1.value.length() + 1)+" x i8], ["+(token1.value.length() + 1)+" x i8]* "+ stringStack.pop() + ", i32 0, i32 0))\n";
+                        tempI += 1;
+                    }else {
+                        output += "%."+ arrayTempI + " = getelementptr inbounds [50 x i8], [50 x i8]* %" + in1 + ", i32 0, i32 0\n";
+                        arrayTempI += 1;
+                        output += "%" + tempI + " = call i32 (i8*, ...) @printf(i8* getelementptr inbounds (["+(3)+" x i8], ["+(3)+" x i8]*  @.formatString, i32 0, i32 0), i8* %."+ (arrayTempI - 1) + ")\n";
+                        tempI += 1;
+                    }
             }
         } else if (sem.equals("@startblock")) {
             output += "{\n";
@@ -374,6 +478,12 @@ public class CodeGenerator {
                     Load(token1);
                     convertToBool(47, Integer.toString(tempI - 1));
                     output += "store i8 %" + (tempI - 1) + ", i8* " + in1 + ", align 1\n";
+                    break;
+                case 45:
+                    output += "%."+ arrayTempI + " = getelementptr inbounds [50 x i8], [50 x i8]* " + in1 + ", i32 0, i32 0\n";
+                    arrayTempI += 1;
+                    output += "%" + tempI + " = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds (["+(3)+" x i8], ["+(3)+" x i8]*  @.formatString, i32 0, i32 0), i8* %."+ (arrayTempI - 1) + ")\n";
+                    tempI += 1;
                     break;
             }
         } else if (sem.equals("@lth")) {
@@ -824,6 +934,7 @@ public class CodeGenerator {
     }
 
     public void WriteOutput(String outputName) {
+        output += "declare i8* @strcpy(i8*, i8*)\n";
         output += "declare i32 @printf(i8*, ...)\n";
         output += "declare i32 @scanf(i8*, ...)\n";
         System.out.println(output);

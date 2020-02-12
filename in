@@ -1,23 +1,11 @@
 function main () : integer
 begin
-    a : integer := 0;
-    b : real := 0;
-    c : boolean := 1;
-    write(~a or b and c);
+    d : string := "hello ther";
+    b : string := "hi fellow";
+    b := d;
+    read(d);
+    write(b);
+    write(d);
+    --write(d[1, 5, 3]);
 end
-<--function main() : integer
-begin
-   a : integer := 2 ;
-    b : integer := 3 ;
-    c : real ;
-    c := b / a ;
-    if ( c <> 1) then
-    begin
-        write("not equal ! ") ;
-    end
-end
-    a : integer := 3.2;
-    b : character ;
-    c : character ;
-    a := -(a + b);
--->
+
