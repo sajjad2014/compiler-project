@@ -14,6 +14,7 @@ public class CodeGenerator {
     int tempI = 0;
     int stringCount =0;
     int arrayTempI = 0;
+    int ifCount = 0;
     boolean inMain = false;
     int bracketCount = 0;
     String output = "";
@@ -51,6 +52,8 @@ public class CodeGenerator {
             output += "%" + idStack.peek() + " = alloca " + dimensions + ", align 16\n";
             idStack.pop();
         } else if (sem.equals("@SDSCP")) {
+            if (idType.containsKey(idStack.peek().value))
+                throw new Exception(String.format("Compile Error (" + currentToken + ") at line " + scanner.getLine() + " @ "));
             idType.put(idStack.peek().value, currentToken.type);
             if (currentToken.type == 43)
                 output += "%" + idStack.peek() + " = alloca i32, align 4\n";
@@ -433,25 +436,10 @@ public class CodeGenerator {
                         tempI += 1;
                     }
             }
-        } else if (sem.equals("@startblock")) {
-            output += "{\n";
-            if (inMain) {
-                bracketCount += 1;
-                if (bracketCount == 1) {
-                    output += "entry:\n";
-                }
-            }
-        } else if (sem.equals("@finishblock")) {
-            if (inMain) {
-                if (bracketCount == 1) {
-                    output += "ret i32 0\n";
-                }
-                bracketCount -= 1;
-            }
-            output += "}\n";
-
-        } else if (sem.equals("@maindef")) {
+        }  else if (sem.equals("@maindef")) {
             output += "define i32 @main()\n";
+            output += "{\n";
+            output += "entry:\n";
             inMain = true;
         } else if (sem.equals("@finishread")) {
             Token token1 = idStack.pop();
@@ -489,10 +477,10 @@ public class CodeGenerator {
         } else if (sem.equals("@lth")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp slt i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp olt float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -510,10 +498,10 @@ public class CodeGenerator {
         } else if (sem.equals("@leq")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp sle i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp ole float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -531,10 +519,10 @@ public class CodeGenerator {
         } else if (sem.equals("@gth")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp sgt i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp ogt float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -552,10 +540,10 @@ public class CodeGenerator {
         } else if (sem.equals("@geq")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp sge i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp oge float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -573,10 +561,10 @@ public class CodeGenerator {
         } else if (sem.equals("@eq")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp eq i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp oeq float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -594,10 +582,10 @@ public class CodeGenerator {
         } else if (sem.equals("@neq")) {
             String[] res = getOperationsSides();
             int type = Integer.parseInt(res[2]);
-            if (type == 44) {
+            if (type == 43) {
                 output += "%" + (tempI) + " = icmp ne i32 " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
-            } else if (type == 43) {
+            } else if (type == 44) {
                 output += "%" + (tempI) + " = fcmp une float " + res[1] + ", " + res[0] + "\n";
                 tempI += 1;
             } else if (type == 46) {
@@ -719,6 +707,44 @@ public class CodeGenerator {
             idStack.push(token);
             idType.put(token.value, type);
 
+        } else if (sem.equals("@jz")) {
+            Token token1 = idStack.pop();
+            int type = 47;
+            String in1 = "";
+            if (token1.type != 0) {
+                token1 = convertConst(token1, type);
+                in1 = token1.value;
+            } else {
+                if (!token1.value.matches("-?\\d+")) {
+                    Load(token1);
+                    convertRightID(type, token1);
+                    in1 = "%" + (tempI - 1);
+                } else {
+                    if (convertRightID(type, token1) == 0)
+                        in1 = "%" + (tempI - 1);
+                    else
+                        in1 = "%" + token1.value;
+                }
+            }
+            output += "%" + (tempI) + " = icmp ne i8 " + in1 + ", 0\n";
+            tempI += 1;
+            output += "br i1 %" + (tempI - 1) + ", label %if.then" + ifCount+", label %if.else"+ifCount+"\n";
+            ifCount += 1;
+            output += "if.then" + (ifCount - 1) + ":\n";
+        } else if(sem.equals("@compjz")){
+            output += "br label %if.end"+ (ifCount - 1) + "\n";
+            output += "if.else" + (ifCount - 1) + ":\n";
+        }else if (sem.equals("@endcondition")){
+            output += "if.end" + (ifCount - 1) + ":\n";
+        } else if(sem.equals("@compjp")){
+            output += "br label %if.end"+ (ifCount - 1) + "\n";
+        } else if (sem.equals("@return")){
+            Load(new Token(0, currentToken.value));
+            convertRightID(43, new Token(0, currentToken.value));
+            output += "ret i32 %" + (tempI - 1) + "\n";
+        } else if (sem.equals("@returnconst")){
+            Token token = convertConst(idStack.pop(), 43);
+            output += "ret i32 " + token.value + "\n";
         }
     }
 
@@ -934,6 +960,7 @@ public class CodeGenerator {
     }
 
     public void WriteOutput(String outputName) {
+        output += "}\n";
         output += "declare i8* @strcpy(i8*, i8*)\n";
         output += "declare i32 @printf(i8*, ...)\n";
         output += "declare i32 @scanf(i8*, ...)\n";

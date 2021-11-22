@@ -119,6 +119,7 @@ CharConst = ['][^'][']
         return new Token(TokenConst.OR, yytext());
     }
     {SingleLineComment} {}
+    "//".* {}
     {MultiLineComment}  {}
     {ID} {
         return new Token(TokenConst.ID, yytext());
